@@ -7,7 +7,7 @@ const routes = require("./routes");
 
 const app = express();
 
-app.use(cors({ credentials: true,origin:["http://127.0.0.1:5173", "http://192.168.56.1:5173", "http://localhost:5173", "http://172.28.240.1:5173", "http://192.168.1.46:5173",]}));
+app.use(cors({ credentials: true,origin:["https://lighthearted-gumdrop-eebd45.netlify.app","http://127.0.0.1:5173", "http://192.168.56.1:5173", "http://localhost:5173", "http://172.28.240.1:5173", "http://192.168.1.46:5173",]}));
 app.use(express.json());
 
 const MONGO_URI = process.env.MONGO_URI;
