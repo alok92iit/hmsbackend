@@ -1,6 +1,7 @@
 const { ObjectId } = require("bson")
 const { Attandance } = require("../models/Attandance")
 const { currentTimeStamp, getCurrentDateTimeStamp } = require("../utils/times")
+const Employee = require("../models/Employee")
 
 
 const markAttandance = async (req, res) => {
@@ -141,6 +142,47 @@ const matrix = async (req, res) => {
         }
     ]
     let matrix=await Attandance.aggregate(query)
+    if (matrix.length==0){
+         const query = [
+                {
+            '$lookup': {
+              'from': 'departments', 
+              'localField': 'departmentId', 
+              'foreignField': '_id', 
+              'as': 'department'
+            }
+          }, {
+            '$unwind': {
+              'path': '$department'
+            }
+          }, {
+            '$addFields': {
+              'department': '$department.name'
+            }
+          },
+                {
+                    '$addFields': {
+                        'createdAt': {
+                            '$dateToString': {
+                                'format': '%d-%m-%Y',
+                                'date': {
+                                    '$toDate': '$createdAt'
+                                }
+                            }
+                        },
+        
+                    }
+                }
+            ]
+            let employees = await Employee.aggregate(query)
+            matrix={
+                'allEmployees':employees,
+                'notMarked':employees,
+                'absentEmployees':[],
+                'presentEmployees':[],
+            }
+            res.status(200).json({data:matrix})
+    }
     res.status(200).json({data:matrix?.length>0?matrix[0]:{}})
 
 }
