@@ -1,5 +1,5 @@
 const { ObjectId } = require("bson")
-const { Attandance } = require("../models/attandance")
+const { Attandance } = require("../models/Attandance")
 const { currentTimeStamp, getCurrentDateTimeStamp } = require("../utils/times")
 
 
